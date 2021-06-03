@@ -2,7 +2,11 @@
 
 const  getHandFromCards = require('./index').getHandFromCards
 
-const  identifyCard = require('./index').identifyCard
+const allCardsHaveSameSuit= require('./index').allCardsHaveSameSuit
+
+const  allCardsHaveDifferentValue = require('./index').allCardsHaveDifferentValue
+
+const cardsHaveConsecutiveValues = require('./index').cardsHaveConsecutiveValues
 
 const assert = require('assert').strict
 
@@ -33,11 +37,16 @@ describe('program', () => {
 })
 
 
-describe('helper function identifyHand', () => {
+describe('helper function allCardsHaveDifferentValue', () => {
 
-  it("must accept an array of 5 different items with the correct card format (Q-S)", () => {
-		assert.equal(getHandFromCards(["Q-S", "Q-C", "Q-H", "Q-D", "2-S" ]), true)
-		assert.equal(getHandFromCards(["A-S", "10-C", "4-H", "9-D", "J-S" ]), true)
+  it("it returns true if all cards have diferent numbers value ", () => {
+		assert.equal(allCardsHaveDifferentValue(["Q-S", "A-C", "J-H", "K-D", "10-S" ]), true)
+	
+	})
+
+	it("it returns false if any  cards have the same  numbers value ", () => {
+		assert.equal(allCardsHaveDifferentValue(["A-S", "A-C", "J-H", "K-D", "10-S" ]), false)
+	
 	})
 
 
@@ -47,5 +56,46 @@ describe('helper function identifyHand', () => {
 
 
 
+
+describe('helper function allCardsHaveSameSuit', () => {
+
+	it("it returns true if all cards have  the same suit ", () => {
+		assert.equal(allCardsHaveSameSuit(["Q-S", "A-S", "J-S", "K-S", "10-S" ]), true)
+		assert.equal(allCardsHaveSameSuit(["2-C", "8-C", "10-C", "A-C", "Q-C" ]), true)
+		assert.equal(allCardsHaveSameSuit(["4-D", "6-D", "J-D", "K-D", "8-D" ]), true)
+	
+	})
+
+	it("it returns false if any cards have  different suits ", () => {
+		assert.equal(allCardsHaveSameSuit(["Q-S", "A-S", "J-D", "K-D", "10-S" ]), false)
+		assert.equal(allCardsHaveSameSuit(["2-C", "8-C", "10-D", "A-C", "Q-C" ]), false)
+		assert.equal(allCardsHaveSameSuit(["4-D", "6-D", "J-D", "K-D", "8-H" ]), false)
+	
+	})
+
+
+
+})
+
+
+describe('helper function cardsHaveConsecutiveValues', () => {
+
+	// it("it returns true if all cards have  consecutive values ", () => {
+	// 	assert.equal(cardsHaveConsecutiveValues(["Q-S", "A-S", "J-S", "K-S", "10-S" ]), true)
+	// 	assert.equal(cardsHaveConsecutiveValues(["4-C", "3-C", "A-C", "5-C", "2-C" ]), true)
+	// 	assert.equal(cardsHaveConsecutiveValues(["J-D", "7-D", "10-D", "8-D", "9-D" ]), true)
+	
+	// })
+
+	it("it returns false if cards  values are not consecutive ", () => {
+		assert.equal(cardsHaveConsecutiveValues(["Q-S", "2-S", "J-D", "K-D", "10-S" ]), false)
+	//	assert.equal(cardsHaveConsecutiveValues(["2-C", "8-C", "10-D", "A-C", "Q-C" ]), false)
+	//	assert.equal(cardsHaveConsecutiveValues(["4-D", "6-D", "J-D", "K-D", "8-H" ]), false)
+	
+	})
+
+
+
+})
 
 

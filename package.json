@@ -5,7 +5,9 @@
   "main": "index.js",
   "scripts": {
     "test": "node ./node_modules/mocha/bin/mocha",
-		"start": "node index.js"
+		"start": "node index.js",
+		"git": "git add . && git commit -m",
+  	"postgit": "git push origin main"
   },
   "repository": {
     "type": "git",
