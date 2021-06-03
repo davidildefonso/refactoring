@@ -1,0 +1,23 @@
+{
+  "name": "refactoring",
+  "version": "1.0.0",
+  "description": "Examples repository for Refactoring Javascript book",
+  "main": "index.js",
+  "scripts": {
+    "test": "node ./node_modules/mocha/bin/mocha",
+		"start": "node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/davidildefonso/refactoring.git"
+  },
+  "author": "di",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/davidildefonso/refactoring/issues"
+  },
+  "homepage": "https://github.com/davidildefonso/refactoring#readme",
+  "devDependencies": {
+    "mocha": "^8.4.0"
+  }
+}
