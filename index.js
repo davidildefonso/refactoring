@@ -1,4 +1,35 @@
 const getHandFromCards = (arr) => {
+	if(validateCards(arr)){
+		if(allCardsHaveDifferentValue(arr)
+			&& allCardsHaveSameSuit(arr)){
+				if(cardsHaveConsecutiveValues(arr)[0]){
+					const sortedCardsValues = cardsHaveConsecutiveValues(arr)[1]
+					if(sortedCardsValues[0] === 14) return 'Royal Flush'
+					else return 'Straight Flush'
+				}else {
+					return 'Flush'
+				}
+			
+		}
+		if(allCardsHaveDifferentValue(arr)){
+			if(cardsHaveConsecutiveValues(arr)[0]){
+				return 'Straight'
+			}else{
+				return 'High Card'
+			}
+
+		}
+
+		if(cardsHaveNEqualValues(arr,4)){
+		
+		}
+				 
+	}
+
+
+}
+
+const validateCards = (arr) => {
 	if(Array.isArray(arr) && arr.length === 5){
 		if(!arr.some(elem => 
 			!(typeof(elem) === "string"
@@ -8,18 +39,26 @@ const getHandFromCards = (arr) => {
 					}
 				}
 	}
-
 }
 
 const unique = (value, index, self) => {
   return self.indexOf(value) === index
 }
 
-// const ages = [26, 27, 26, 26, 28, 28, 29, 29, 30]
+const uniqueValuesCounter = (arr) => 
+	arr.reduce((acum, value, index, self) => {
+		if(acum.hasOwnProperty(value)) acum[value]++
+		else  acum[value] = 1
+		return acum
+	},{})
+
+const ages = [26, 27, 26, 26, 28, 28, 29, 29, 30]
+console.log("reducer: ", uniqueValuesCounter(ages))	
 // const uniqueAges = ages.filter(unique)
 //console.log(uniqueAges)
 
-const identifyCard = () => {
+const cardsHaveNEqualValues = (arr, n) => {
+	const uniqueValues = arr.filter(unique)
 
 }
 
@@ -43,7 +82,14 @@ const allCardsHaveSameSuit = (arrOfCards) => {
 
 
 const cardsHaveConsecutiveValues = (arrOfCards) => {
-	const cardsValues = arrOfCards.map(card => {
+	const cardsValues = getCardsValuesAsIntExceptIfValueIsA(arrOfCards)
+	const sortedCardsValues = sortCards(cardsValues)
+	if(!sortedCardsValues) return [false]
+	return [checkIfCardsAreConsecutive(sortedCardsValues), sortedCardsValues]
+}
+
+const getCardsValuesAsIntExceptIfValueIsA = (arr) => {
+	return  arr.map(card => {
 		const cardStringValue = card.match(/.*(?=-)/)[0]
 		if(cardStringValue === "K") return 13
 		if(cardStringValue === "Q") return 12
@@ -51,32 +97,38 @@ const cardsHaveConsecutiveValues = (arrOfCards) => {
 		if(cardStringValue === "A") return "A"
 		return Number(cardStringValue)
 	})
-//	console.log(cardsValues)
-	if(cardsValues.includes("A")){
-	
-	}else{
-		const sortedCardsValues = cardsValues.sort((a,b) => b - a)
-		console.log(sortedCardsValues)
-		const sum = sortedCardsValues.reduce((acum, value) => acum + value, 0)
-	
-		const sumOfConsecutiveNumbersFromMinToMaxValuesOfSortedArr = (arr) =>
-			((arr[arr.length - 1] + arr[0])*( -arr[arr.length - 1] + arr[0] + 1))/2
+}
 
-			console.log(sumOfConsecutiveNumbersFromMinToMaxValuesOfSortedArr(sortedCardsValues) === sum)
-		if(sum === sumOfConsecutiveNumbersFromMinToMaxValuesOfSortedArr(sortedCardsValues)){
-			return true
+const sortCards = (arr) => {
+	let sortedCardsValues = arr.sort((a,b) => b - a)
+	if(sortedCardsValues.includes("A")){
+		let cardsValuesWithoutA = sortedCardsValues.filter(elem => elem !== "A")
+		cardsValuesWithoutA = cardsValuesWithoutA.sort((a,b) => b - a)
+		if(cardsValuesWithoutA[0] === 13) {
+			cardsValuesWithoutA.unshift(14)
+		}else if(cardsValuesWithoutA[cardsValuesWithoutA.length - 1] === 2){
+			cardsValuesWithoutA.push(1)
+		}else{
+			return false
 		}
-		
-		return false 
+		sortedCardsValues = cardsValuesWithoutA
 	}
+	return sortedCardsValues
+}
 
 
+const checkIfCardsAreConsecutive = (arr) => {
+	const sum = arr.reduce((acum, value) => acum + value, 0)
+	if(sum === sumOfConsecutiveNumbersFromMinToMaxValuesOfSortedArr(arr)){
+		return true
+	}	
+	return false 
 }
 
 
 
-
-
+const sumOfConsecutiveNumbersFromMinToMaxValuesOfSortedArr = (arr) =>
+		((arr[arr.length - 1] + arr[0])*( -arr[arr.length - 1] + arr[0] + 1))/2
 
 
 
