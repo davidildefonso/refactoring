@@ -1,4 +1,4 @@
-const getHandFromCards = (arr) => {
+const getHandFromCards = (arr) => {				
 	if(validateCards(arr)){
 		if(allCardsHaveDifferentValue(arr)
 			&& allCardsHaveSameSuit(arr)){
@@ -9,7 +9,6 @@ const getHandFromCards = (arr) => {
 				}else {
 					return 'Flush'
 				}
-			
 		}
 		if(allCardsHaveDifferentValue(arr)){
 			if(cardsHaveConsecutiveValues(arr)[0]){
@@ -17,16 +16,28 @@ const getHandFromCards = (arr) => {
 			}else{
 				return 'High Card'
 			}
-
 		}
 
 		if(cardsHaveNEqualValues(arr,4)){
-		
+			return 'Four of a kind'
 		}
-				 
+
+		if(cardsHaveNEqualValues(arr,3)){
+			if(cardsHaveNEqualValues(arr,3,2)){
+				return "Full House"
+			}
+			return "Three of a kind"
+		}
+
+	
+		if(cardsHaveNEqualValues(arr,2)){
+
+			if(cardsHaveNEqualValues(arr,2,2)){
+				return "Two Pairs"
+			}
+			return "One Pair"
+		}		 
 	}
-
-
 }
 
 const validateCards = (arr) => {
@@ -45,22 +56,54 @@ const unique = (value, index, self) => {
   return self.indexOf(value) === index
 }
 
-const uniqueValuesCounter = (arr) => 
-	arr.reduce((acum, value, index, self) => {
+const uniqueValuesCounter = (arr) => {
+	const uniqueValuesObj = arr.reduce((acum, value, index, self) => {
 		if(acum.hasOwnProperty(value)) acum[value]++
 		else  acum[value] = 1
 		return acum
 	},{})
 
+	return Object.values(uniqueValuesObj)
+}
+	
+
+
+const getMaxValueFromObjectProperties = (obj) => 
+	Math.max(...Object.values(obj))
+
 const ages = [26, 27, 26, 26, 28, 28, 29, 29, 30]
-console.log("reducer: ", uniqueValuesCounter(ages))	
+const temp = uniqueValuesCounter(ages)
+
+
 // const uniqueAges = ages.filter(unique)
 //console.log(uniqueAges)
 
-const cardsHaveNEqualValues = (arr, n) => {
-	const uniqueValues = arr.filter(unique)
+const cardsHaveNEqualValues = (arr, n, m = 0) => {
 
+	const valuesArr = convertCardsFromStringToNumbers(arr)
+	const uniqueValues = uniqueValuesCounter(valuesArr)
+	
+	if(m === 0)	 {
+		 return uniqueValues.some(elem => elem === n)
+	}
+	
+	const hasNEqualValues = uniqueValues.some(elem => elem === n)
+	
+	if(hasNEqualValues){
+		
+		uniqueValues.splice(uniqueValues.indexOf(n), 1)
+			
+		const hasAnotherMEqualValues = uniqueValues.some(elem => elem === m)
+		if(hasAnotherMEqualValues) {
+			return true
+		}
+		return false
+	}
+	return false	
 }
+
+
+
 
 const allCardsHaveDifferentValue = (arrOfCards) => {
 	const cardsValues = arrOfCards.map(card => card.match(/.*(?=-)/)[0])
@@ -79,11 +122,15 @@ const allCardsHaveSameSuit = (arrOfCards) => {
 }
 
 
-
+const convertCardsFromStringToNumbers = (arrOfCards) => {
+	const cardsValues = getCardsValuesAsIntExceptIfValueIsA(arrOfCards)
+	return cardsValues
+}
 
 const cardsHaveConsecutiveValues = (arrOfCards) => {
+
 	const cardsValues = getCardsValuesAsIntExceptIfValueIsA(arrOfCards)
-	const sortedCardsValues = sortCards(cardsValues)
+	const sortedCardsValues = sortCards(cardsValues)	
 	if(!sortedCardsValues) return [false]
 	return [checkIfCardsAreConsecutive(sortedCardsValues), sortedCardsValues]
 }

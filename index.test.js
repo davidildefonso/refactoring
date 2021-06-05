@@ -67,10 +67,50 @@ describe('program', () => {
 
 	it(`it recognizes a 'Four of a kind' hand ('10-S', '10-C', '10-D', '10-S', '6-H') set of cards
 	 and returns it from the function`, () => {
-			assert.equal(getHandFromCards(['10-S', '10-C', '10-D', '10-S', '6-H']), "Four of a kind")
+			assert.equal(getHandFromCards(['10-S', '10-C', '10-D', '10-H', '6-H']), "Four of a kind")
 			assert.equal(getHandFromCards(['A-D', 'A-C', 'A-H', '4-H', 'A-S']), "Four of a kind")
 			assert.equal(getHandFromCards(['J-D', 'J-H', 'J-S', 'J-C', '7-D']), "Four of a kind")
 			assert.equal(getHandFromCards(['3-C', '3-D', '3-H', '3-S', '9-S']), "Four of a kind")
+	})
+
+	it(`it recognizes a 'Full House' hand ('10-S', '10-C', '10-D', 'A-S', 'A-H') set of cards
+	 and returns it from the function`, () => {
+			assert.equal(getHandFromCards(['10-S', '10-C', '10-D', 'A-S', 'A-H']), "Full House")
+			assert.equal(getHandFromCards(['A-D', 'A-C', 'A-H', '4-H', '4-S']), "Full House")
+			assert.equal(getHandFromCards(['J-D', 'J-H', 'J-S', '7-C', '7-D']), "Full House")
+			assert.equal(getHandFromCards(['3-C', '3-D', '3-H', '9-D', '9-S']), "Full House")
+	})
+
+	it(`it recognizes a 'Three of a kind' hand ('10-S', '10-C', '10-D', '2-S', 'A-H') set of cards
+	 and returns it from the function`, () => {
+			assert.equal(getHandFromCards(['10-S', '10-C', '10-D', '7-S', 'A-H']), "Three of a kind")
+			assert.equal(getHandFromCards(['A-D', 'A-C', 'A-H', '9-H', '4-S']), "Three of a kind")
+			assert.equal(getHandFromCards(['J-D', 'J-H', 'J-S', 'Q-C', '7-D']), "Three of a kind")
+			assert.equal(getHandFromCards(['3-C', '3-D', '3-H', 'K-D', '9-S']), "Three of a kind")
+	})
+
+	it(`it recognizes a 'Two Pairs' hand ('10-S', '10-C', '2-D', '2-S', 'A-H') set of cards
+	 and returns it from the function`, () => {
+		assert.equal(getHandFromCards(['10-S', '10-C', '2-D', '2-S', 'A-H']), "Two Pairs")
+		assert.equal(getHandFromCards(['A-D', 'A-C', '9-H', '9-S', '4-S']), "Two Pairs")
+		assert.equal(getHandFromCards(['J-D', 'J-H', 'Q-S', 'Q-C', '7-D']), "Two Pairs")
+		assert.equal(getHandFromCards(['3-C', '3-D', 'K-H', 'K-D', '9-S']), "Two Pairs")
+	})
+
+	it(`it recognizes a 'One Pair' hand ('10-S', '10-C', '8-D', '2-S', 'A-H') set of cards
+	 and returns it from the function`, () => {
+			assert.equal(getHandFromCards(['10-S', '10-C', '6-D', '7-S', 'A-H']), "One Pair")
+			assert.equal(getHandFromCards(['A-D', 'A-C', '10-H', '9-H', '4-S']), "One Pair")
+			assert.equal(getHandFromCards(['J-D', 'J-H', 'K-S', 'Q-C', '7-D']), "One Pair")
+			assert.equal(getHandFromCards(['3-C', '3-D', '2-H', 'K-D', '9-S']), "One Pair")
+	})
+
+	it(`it recognizes a 'High Card' hand ('A-S', '4-C', '8-D', '2-S', 'A-H') set of cards
+	 and returns it from the function`, () => {
+			assert.equal(getHandFromCards(['4-S', '10-C', '6-D', '7-S', 'A-H']), "High Card")
+			assert.equal(getHandFromCards(['K-D', '3-C', '10-H', '9-H', '4-S']), "High Card")
+			assert.equal(getHandFromCards(['J-D', '9-H', '2-S', '10-C', '7-D']), "High Card")
+			assert.equal(getHandFromCards(['10-C', '3-D', '2-H', 'A-D', '9-S']), "High Card")
 	})
 
 })
