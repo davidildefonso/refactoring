@@ -1,15 +1,15 @@
 const getHandFromCards = (cardsArr) => {				
 	if(cardsAreValid(cardsArr)){
 		if(cardsAreUniqueAndHaveSameSuit(cardsArr)){
-				if(cardsHaveConsecutiveValues(cardsArr)[0]){
-					const sortedCardsValues = cardsHaveConsecutiveValues(cardsArr)[1]
+				if(cardsHaveConsecutiveValues(cardsArr)){
+					const sortedCardsValues = getSortedNumericCardValues(cardsArr)
 					if(sortedCardsValues[0] === 14) return 'Royal Flush'
 					return 'Straight Flush'
 				}
 				return 'Flush'				
 		}
 		if(allCardsHaveDifferentValue(cardsArr)){
-			if(cardsHaveConsecutiveValues(cardsArr)[0]){
+			if(cardsHaveConsecutiveValues(cardsArr)){
 				return 'Straight'
 			}
 			return 'High Card'
@@ -44,8 +44,10 @@ const cardsAreValid = (arr) => {
 					if(arr.filter(unique).length === arr.length){
 						return true
 					}
-				}
+					return false
+		}return false
 	}
+	return false
 }
 
 const cardsAreUniqueAndHaveSameSuit = (arr) => 
@@ -66,19 +68,19 @@ const allCardsHaveSameSuit = (arrOfCards) => {
 }
 
 
-const unique = (value, index, self) => {
-  return self.indexOf(value) === index
+
+const cardsHaveConsecutiveValues = (arrOfCards) => {
+	const sortedCardsValues = getSortedNumericCardValues(arrOfCards)
+	if(sortedCardsValues) return checkIfCardsAreConsecutive(sortedCardsValues)
+	return false // [checkIfCardsAreConsecutive(sortedCardsValues), sortedCardsValues]
 }
 
-const uniqueValuesCounter = (arr) => {
-	const uniqueValuesObj = arr.reduce((acum, value) => {
-		if(acum.hasOwnProperty(value)) acum[value]++
-		else  acum[value] = 1
-		return acum
-	},{})
-	return Object.values(uniqueValuesObj)
+
+const getSortedNumericCardValues = (arrOfCards) => {
+	const cardsValues = getCardsValuesAsIntExceptIfValueIsA(arrOfCards)
+	return sortCards(cardsValues)	
 }
-	
+
 
 const cardsHaveGivenRepeatedValuesCount = (arr, n, m = 0) => {
 	const valuesArr = convertCardsFromStringToNumbers(arr)
@@ -107,12 +109,16 @@ const convertCardsFromStringToNumbers = (arrOfCards) => {
 	return cardsValues
 }
 
-const cardsHaveConsecutiveValues = (arrOfCards) => {
-	const cardsValues = getCardsValuesAsIntExceptIfValueIsA(arrOfCards)
-	const sortedCardsValues = sortCards(cardsValues)	
-	if(!sortedCardsValues) return [false]
-	return [checkIfCardsAreConsecutive(sortedCardsValues), sortedCardsValues]
+
+
+const checkIfCardsAreConsecutive = (arr) => {
+	const sum = arr.reduce((acum, value) => acum + value, 0)
+	if(sum === sumOfConsecutiveNumbersFromMinToMaxValuesOfSortedArr(arr)){
+		return true
+	}	
+	return false 
 }
+
 
 const getCardsValuesAsIntExceptIfValueIsA = (arr) => {
 	return  arr.map(card => {
@@ -143,18 +149,27 @@ const sortCards = (arr) => {
 }
 
 
-const checkIfCardsAreConsecutive = (arr) => {
-	const sum = arr.reduce((acum, value) => acum + value, 0)
-	if(sum === sumOfConsecutiveNumbersFromMinToMaxValuesOfSortedArr(arr)){
-		return true
-	}	
-	return false 
+
+const uniqueValuesCounter = (arr) => {
+	const uniqueValuesObj = arr.reduce((acum, value) => {
+		if(acum.hasOwnProperty(value)) acum[value]++
+		else  acum[value] = 1
+		return acum
+	},{})
+	return Object.values(uniqueValuesObj)
 }
+	
+
+const unique = (value, index, self) => {
+  return self.indexOf(value) === index
+}
+
+
 
 const sumOfConsecutiveNumbersFromMinToMaxValuesOfSortedArr = (arr) =>
 		((arr[arr.length - 1] + arr[0])*( -arr[arr.length - 1] + arr[0] + 1))/2
 
 
 module.exports = {getHandFromCards, allCardsHaveDifferentValue, allCardsHaveSameSuit,
-	cardsHaveConsecutiveValues
+	cardsHaveConsecutiveValues, cardsAreValid
 }
