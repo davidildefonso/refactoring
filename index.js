@@ -1,3 +1,5 @@
+'use strict'
+
 const getHandFromCards = (cardsArr) => {				
 	if(cardsAreValid(cardsArr)){
 		if(cardsAreUniqueAndHaveSameSuit(cardsArr)){
