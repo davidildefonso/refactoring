@@ -4,10 +4,11 @@
   "description": "Examples repository for Refactoring Javascript book",
   "main": "index.js",
   "scripts": {
-    "test": "node ./node_modules/mocha/bin/mocha",
-		"start": "node index.js",
-		"git": "git add . && git commit -m",
-  	"postgit": "git push origin main"
+    "test": "jest",
+    "start": "node index.js",
+    "git": "git add . && git commit -m",
+    "postgit": "git push origin main",
+		"mochatest": "node ./node_modules/mocha/bin/mocha"
   },
   "repository": {
     "type": "git",
@@ -20,6 +21,10 @@
   },
   "homepage": "https://github.com/davidildefonso/refactoring#readme",
   "devDependencies": {
-    "mocha": "^8.4.0"
+    "@testing-library/jest-dom": "^5.13.0",
+    "chai": "^4.3.4",
+    "jest": "^27.0.4",
+    "mocha": "^8.4.0",
+    "sinon": "^11.1.1"
   }
 }
