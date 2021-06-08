@@ -4,7 +4,7 @@
   "description": "Examples repository for Refactoring Javascript book",
   "main": "index.js",
   "scripts": {
-    "test": "jest",
+    "test": "jest --coverage",
     "start": "node index.js",
     "git": "git add . && git commit -m",
     "postgit": "git push origin main",

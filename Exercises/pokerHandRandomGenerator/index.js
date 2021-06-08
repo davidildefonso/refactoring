@@ -1,13 +1,34 @@
 'use strict'
 
+const generateDeck = () => {
+	let result = []
+	const suits = ["C", "H", "D", "S"]
+	for(let i=1; i<=13; i++){	
+		for(let j=0; j<4; j++){	
+			result.push(numberToStr(i) + "-" + suits[j])			 
+		}		
+	}
+	return result
+}
+
 const getRandomHand = () => {
 	let result = []
+	const deck = generateDeck()
 	while(result.length < 5){
-		result.push(getRandomCard())
+		result.push(deck[Math.floor(Math.random()*deck.length)])
 		result = result.filter(unique)
 	}
 	return result
 }
+
+// const getRandomHand = () => {
+// 	let result = []
+// 	while(result.length < 5){
+// 		result.push(getRandomCard())
+// 		result = result.filter(unique)
+// 	}
+// 	return result
+// }
 
 const getRandomCard = () => {
 	let result = ""
@@ -50,6 +71,8 @@ const unique = (value, index, self) => {
   return self.indexOf(value) === index
 }
 
+
+
 module.exports = {
 	getRandomHand,
 	getRandomCard,
@@ -57,5 +80,6 @@ module.exports = {
 	numberToStr,
 	validateFormat,
 	allCardsAreDifferent,
-	unique
+	unique,
+	generateDeck
 }

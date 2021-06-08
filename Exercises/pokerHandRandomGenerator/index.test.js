@@ -7,6 +7,7 @@ const validateFormat = require('./index').validateFormat
 const numberToStr = require('./index').numberToStr
 const allCardsAreDifferent = require('./index').allCardsAreDifferent
 const unique = require('./index').unique
+const generateDeck = require('./index').generateDeck
 
 const assert = require('assert').strict
 
@@ -159,4 +160,29 @@ describe('function unique', () => {
 		const arr = ["A-H", "A-H", "5-C", "5-C", "Q-S"]
 		expect(unique(arr[1], 1, arr)).toBe(false)
 	})
+})
+
+
+describe('function generateDeck', () => {
+
+  it("returns an array of 52 elements ", () => {
+		const deck = generateDeck()
+		expect(deck).toHaveLength(52)
+	
+	})
+
+  it("all elements of the returned array are a valid cards", () => {
+		const deck = generateDeck()
+		for(let i = 0; i < 52; i++){
+			expect(validateFormat(deck[i])).toBe(true)
+		}	
+	})
+
+	it("all cards of the hand must be different", () => {		
+		const deck = generateDeck()
+		expect(allCardsAreDifferent(deck)).toBe(true)
+	
+	})
+
+
 })

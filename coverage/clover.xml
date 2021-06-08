@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<coverage generated="1623146902019" clover="3.2.0">
+  <project timestamp="1623146902019" name="All files">
+    <metrics statements="41" coveredstatements="41" conditionals="16" coveredconditionals="16" methods="8" coveredmethods="8" elements="65" coveredelements="65" complexity="0" loc="41" ncloc="41" packages="1" files="1" classes="1"/>
+    <file name="index.js" path="C:\Users\david\refactoring\Exercises\pokerHandRandomGenerator\index.js">
+      <metrics statements="41" coveredstatements="41" conditionals="16" coveredconditionals="16" methods="8" coveredmethods="8"/>
+      <line num="3" count="1" type="stmt"/>
+      <line num="4" count="27" type="stmt"/>
+      <line num="5" count="27" type="stmt"/>
+      <line num="6" count="27" type="stmt"/>
+      <line num="7" count="351" type="stmt"/>
+      <line num="8" count="1404" type="stmt"/>
+      <line num="11" count="27" type="stmt"/>
+      <line num="14" count="1" type="stmt"/>
+      <line num="15" count="24" type="stmt"/>
+      <line num="16" count="24" type="stmt"/>
+      <line num="17" count="24" type="stmt"/>
+      <line num="18" count="123" type="stmt"/>
+      <line num="19" count="123" type="stmt"/>
+      <line num="21" count="24" type="stmt"/>
+      <line num="33" count="1" type="stmt"/>
+      <line num="34" count="22" type="stmt"/>
+      <line num="35" count="22" type="stmt"/>
+      <line num="36" count="22" type="stmt"/>
+      <line num="37" count="22" type="stmt"/>
+      <line num="38" count="22" type="stmt"/>
+      <line num="39" count="22" type="stmt"/>
+      <line num="42" count="1" type="stmt"/>
+      <line num="43" count="43" type="stmt"/>
+      <line num="44" count="43" type="stmt"/>
+      <line num="47" count="1" type="stmt"/>
+      <line num="48" count="1447" type="cond" truecount="6" falsecount="0"/>
+      <line num="50" count="1434" type="cond" truecount="2" falsecount="0"/>
+      <line num="51" count="1324" type="cond" truecount="2" falsecount="0"/>
+      <line num="52" count="1215" type="cond" truecount="2" falsecount="0"/>
+      <line num="53" count="1104" type="cond" truecount="2" falsecount="0"/>
+      <line num="54" count="993" type="stmt"/>
+      <line num="58" count="1" type="stmt"/>
+      <line num="59" count="87" type="stmt"/>
+      <line num="60" count="87" type="stmt"/>
+      <line num="63" count="1" type="stmt"/>
+      <line num="64" count="25" type="cond" truecount="2" falsecount="0"/>
+      <line num="65" count="23" type="stmt"/>
+      <line num="67" count="2" type="stmt"/>
+      <line num="70" count="1" type="stmt"/>
+      <line num="71" count="552" type="stmt"/>
+      <line num="76" count="1" type="stmt"/>
+    </file>
+  </project>
+</coverage>
