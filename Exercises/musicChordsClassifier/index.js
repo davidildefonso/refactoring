@@ -14,7 +14,7 @@ song_11 = []
 
 let songs = []
 let allChords = [] 
-let labelCounts = [] 
+let labelCounts = {}
 let labelProbabilities = [] 
 let chordCountsInLabels = {} 
 let probabilityOfChordsInLabels = {} 
@@ -35,7 +35,6 @@ const updateChordsList = (list, chords) => {
 
 function train(chords, difficulty){
 	songs = updateArr(songs, difficulty, chords)
-	console.log(allChords, chords)
   allChords = updateChordsList(allChords, chords)
 
 		
@@ -44,6 +43,8 @@ function train(chords, difficulty){
 	} else {
 		labelCounts[difficulty] = 1 
 	}
+
+	console.log(labelCounts)
 } 
 
 
@@ -133,5 +134,5 @@ classify(['f#m7', 'a', 'dadd9', 'dmaj7', 'bm', 'bm7', 'd', 'f#m'])
 
 
 module.exports = {
-	classify
+	classify, train
 }
