@@ -36,40 +36,36 @@ function train(chords, label){
 	}
 } 
 
-function getNumberOfSongs(){
- return songs.length 
-} 
+
 
 function setLabelProbabilities(){
- Object.keys(labelCounts).forEach(function(label){
- var numberOfSongs = getNumberOfSongs() 
- labelProbabilities[label] = labelCounts[label] / numberOfSongs 
- }) 
+	Object.keys(labelCounts).forEach(function(label){
+		labelProbabilities[label] = labelCounts[label] / songs.length 
+	}) 
 } 
 
 function setChordCountsInLabels(){
- songs.forEach(function(i){
- if(chordCountsInLabels[i[0]] === undefined){
- chordCountsInLabels[i[0]] = {} 
- }
- i[1].forEach(function(j){
- if(chordCountsInLabels[i[0]][j] > 0){
- chordCountsInLabels[i[0]][j] =
-chordCountsInLabels[i[0]][j] + 1 
- } else {
- chordCountsInLabels[i[0]][j] = 1 
- }
- }) 
- }) 
+	songs.forEach(song => {
+		if(!chordCountsInLabels[song[0]]){
+			chordCountsInLabels[song[0]] = {} 
+		}
+		song[1].forEach(chord => {
+			if(chordCountsInLabels[song[0]][chord] > 0){
+				chordCountsInLabels[song[0]][chord]++ 
+			} else {
+				chordCountsInLabels[song[0]][chord] = 1 
+			}
+		}) 
+	}) 
 }
 
 function setProbabilityOfChordsInLabels(){
- probabilityOfChordsInLabels = chordCountsInLabels 
- Object.keys(probabilityOfChordsInLabels).forEach(function(i){
- Object.keys(probabilityOfChordsInLabels[i]).forEach(function(j){
- probabilityOfChordsInLabels[i][j] =probabilityOfChordsInLabels[i][j] * 1.0 / songs.length 
- }) 
- }) 
+	probabilityOfChordsInLabels = chordCountsInLabels 
+	Object.keys(probabilityOfChordsInLabels).forEach(difficulty =>  {
+		Object.keys(probabilityOfChordsInLabels[difficulty]).forEach(chord => {
+			probabilityOfChordsInLabels[difficulty][chord] /= songs.length 
+		}) 
+	}) 
 }
 
 train(imagine, 'easy') 
@@ -90,20 +86,21 @@ setProbabilityOfChordsInLabels()
 function classify(chords){
 	if(Array.isArray(chords) && 
 			!chords.some(chord => typeof(chord) !== 'string')){
-		var ttal = labelProbabilities 
-		var classified = {} 
-		Object.keys(ttal).forEach(function(obj){
-		var first = labelProbabilities[obj] + 1.01 
-		chords.forEach(function(chord){
-		var probabilityOfChordInLabel =
-		probabilityOfChordsInLabels[obj][chord] 
-		if(probabilityOfChordInLabel === undefined){
-		first + 1.01 
-		} else {
-		first = first * (probabilityOfChordInLabel + 1.01) 
-		}
-		}) 
-		classified[obj] = first 
+		const  total = labelProbabilities 
+		let classified = {} 
+		console.log(total)
+		Object.keys(total).forEach(difficulty => {
+			let first = labelProbabilities[difficulty] + 1.01 
+			chords.forEach(chord => {
+				const probabilityOfChordInLabel =
+					probabilityOfChordsInLabels[difficulty][chord] 
+				if(!probabilityOfChordInLabel){
+					first + 1.01 
+				} else {
+					first = first * (probabilityOfChordInLabel + 1.01) 
+				}
+			}) 
+			classified[difficulty] = first 
 		}) 
 		const [difficulty, score] =  getDifficultyAndScore(classified) 
 		return `difficulty: ${difficulty} score: ${score}`	
