@@ -53,6 +53,7 @@ const numberToStr = (num) => {
 		if(num === 12) return 'Q'
 		return num.toString()
 	}
+	return false
 }
 
 const validateFormat = (str) => {

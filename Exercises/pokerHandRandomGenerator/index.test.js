@@ -66,25 +66,25 @@ describe('function getRandomCard', () => {
 describe('function numberToStr', () => {
 
   it(" doesnt accept non-numbers ", () => {
-		expect(numberToStr(false)).toBe(undefined)
-		expect(numberToStr("A")).toBe(undefined)
-		expect(numberToStr("10")).toBe(undefined)
-		expect(numberToStr([2])).toBe(undefined)
-		expect(numberToStr({s:2})).toBe(undefined)	
+		expect(numberToStr(false)).toBe(false)
+		expect(numberToStr("A")).toBe(false)
+		expect(numberToStr("10")).toBe(false)
+		expect(numberToStr([2])).toBe(false)
+		expect(numberToStr({s:2})).toBe(false)	
 	})
 
 	it(" only  accepts integer numbers ", () => {
-	 	expect(numberToStr(Math.sqrt(2))).toBe(undefined)
-		expect(numberToStr(Math.sin(Math.PI/5))).toBe(undefined)
-    expect(numberToStr(5.65)).toBe(undefined)
-		expect(numberToStr(Infinity)).toBe(undefined)
+	 	expect(numberToStr(Math.sqrt(2))).toBe(false)
+		expect(numberToStr(Math.sin(Math.PI/5))).toBe(false)
+    expect(numberToStr(5.65)).toBe(false)
+		expect(numberToStr(Infinity)).toBe(false)
 	})
 
 	it("   doesnt accept out of range numbers [1-13] ", () => {
-	 	expect(numberToStr(0)).toBe(undefined)
-		expect(numberToStr(-1)).toBe(undefined)
-    expect(numberToStr(15)).toBe(undefined)
-		expect(numberToStr(Infinity)).toBe(undefined)
+	 	expect(numberToStr(0)).toBe(false)
+		expect(numberToStr(-1)).toBe(false)
+    expect(numberToStr(15)).toBe(false)
+		expect(numberToStr(Infinity)).toBe(false)
 	})
 
 	it(" if number is between 2 and 10 it return the same number as string ", () => {
