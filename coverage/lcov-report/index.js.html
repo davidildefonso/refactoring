@@ -25,7 +25,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>77/77</span>
+                <span class='fraction'>79/79</span>
             </div>
         
             
@@ -39,14 +39,14 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>16/16</span>
+                <span class='fraction'>18/18</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>77/77</span>
+                <span class='fraction'>79/79</span>
             </div>
         
             
@@ -185,7 +185,15 @@
 <a name='L126'></a><a href='#L126'>126</a>
 <a name='L127'></a><a href='#L127'>127</a>
 <a name='L128'></a><a href='#L128'>128</a>
-<a name='L129'></a><a href='#L129'>129</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L129'></a><a href='#L129'>129</a>
+<a name='L130'></a><a href='#L130'>130</a>
+<a name='L131'></a><a href='#L131'>131</a>
+<a name='L132'></a><a href='#L132'>132</a>
+<a name='L133'></a><a href='#L133'>133</a>
+<a name='L134'></a><a href='#L134'>134</a>
+<a name='L135'></a><a href='#L135'>135</a>
+<a name='L136'></a><a href='#L136'>136</a>
+<a name='L137'></a><a href='#L137'>137</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
@@ -205,15 +213,25 @@
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">10x</span>
-<span class="cline-any cline-yes">10x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">10x</span>
 <span class="cline-any cline-yes">70x</span>
 <span class="cline-any cline-yes">42x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">10x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">10x</span>
+<span class="cline-any cline-yes">10x</span>
+<span class="cline-any cline-yes">10x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">10x</span>
@@ -275,8 +293,6 @@
 <span class="cline-any cline-yes">110x</span>
 <span class="cline-any cline-yes">26x</span>
 <span class="cline-any cline-yes">26x</span>
-<span class="cline-any cline-yes">26x</span>
-<span class="cline-any cline-yes">26x</span>
 <span class="cline-any cline-yes">78x</span>
 <span class="cline-any cline-yes">78x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -328,26 +344,36 @@ bulletproof = ['d#m', 'g#', 'b', 'f#', 'g#m', 'c#']
 song_11 = [] 
 &nbsp;
 let songs = []
-let labels = [] 
 let allChords = [] 
 let labelCounts = [] 
 let labelProbabilities = [] 
 let chordCountsInLabels = {} 
 let probabilityOfChordsInLabels = {} 
 &nbsp;
-function train(chords, label){
-	songs.push([label, chords])
-	labels.push(label)
+&nbsp;
+const updateArr = (arr, ...params) =&gt; 
+	arr.concat([[...params]])
+&nbsp;
+const updateChordsList = (list, chords) =&gt; {
 	chords.forEach(chord =&gt; {
-		if(!allChords.includes(chord)){
-			allChords.push(chord)
+		if(!list.includes(chord)){
+			list.push(chord)
 		}	
 	})
+	return list
+}
+&nbsp;
+&nbsp;
+function train(chords, difficulty){
+	songs = updateArr(songs, difficulty, chords)
+	console.log(allChords, chords)
+  allChords = updateChordsList(allChords, chords)
+&nbsp;
 		
-	if((Object.keys(labelCounts).includes(label))){
-		labelCounts[label]++ 
+	if((Object.keys(labelCounts).includes(difficulty))){
+		labelCounts[difficulty]++ 
 	} else {
-		labelCounts[label] = 1 
+		labelCounts[difficulty] = 1 
 	}
 } 
 &nbsp;
@@ -401,10 +427,8 @@ setProbabilityOfChordsInLabels()
 function classify(chords){
 	if(Array.isArray(chords) &amp;&amp; 
 			!chords.some(chord =&gt; typeof(chord) !== 'string')){
-		const  total = labelProbabilities 
 		let classified = {} 
-		console.log(total)
-		Object.keys(total).forEach(difficulty =&gt; {
+		Object.keys(labelProbabilities).forEach(difficulty =&gt; {
 			let first = labelProbabilities[difficulty] + 1.01 
 			chords.forEach(chord =&gt; {
 				const probabilityOfChordInLabel =
@@ -448,7 +472,7 @@ module.exports = {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Wed Jun 09 2021 05:35:36 GMT-0500 (hora estándar de Perú)
+                at Wed Jun 09 2021 06:02:17 GMT-0500 (hora estándar de Perú)
             </div>
         </div>
         <script src="prettify.js"></script>

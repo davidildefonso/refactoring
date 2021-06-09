@@ -13,26 +13,36 @@ bulletproof = ['d#m', 'g#', 'b', 'f#', 'g#m', 'c#']
 song_11 = [] 
 
 let songs = []
-let labels = [] 
 let allChords = [] 
 let labelCounts = [] 
 let labelProbabilities = [] 
 let chordCountsInLabels = {} 
 let probabilityOfChordsInLabels = {} 
 
-function train(chords, label){
-	songs.push([label, chords])
-	labels.push(label)
+
+const updateArr = (arr, ...params) => 
+	arr.concat([[...params]])
+
+const updateChordsList = (list, chords) => {
 	chords.forEach(chord => {
-		if(!allChords.includes(chord)){
-			allChords.push(chord)
+		if(!list.includes(chord)){
+			list.push(chord)
 		}	
 	})
+	return list
+}
+
+
+function train(chords, difficulty){
+	songs = updateArr(songs, difficulty, chords)
+	console.log(allChords, chords)
+  allChords = updateChordsList(allChords, chords)
+
 		
-	if((Object.keys(labelCounts).includes(label))){
-		labelCounts[label]++ 
+	if((Object.keys(labelCounts).includes(difficulty))){
+		labelCounts[difficulty]++ 
 	} else {
-		labelCounts[label] = 1 
+		labelCounts[difficulty] = 1 
 	}
 } 
 
@@ -86,10 +96,8 @@ setProbabilityOfChordsInLabels()
 function classify(chords){
 	if(Array.isArray(chords) && 
 			!chords.some(chord => typeof(chord) !== 'string')){
-		const  total = labelProbabilities 
 		let classified = {} 
-		console.log(total)
-		Object.keys(total).forEach(difficulty => {
+		Object.keys(labelProbabilities).forEach(difficulty => {
 			let first = labelProbabilities[difficulty] + 1.01 
 			chords.forEach(chord => {
 				const probabilityOfChordInLabel =
