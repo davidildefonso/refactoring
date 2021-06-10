@@ -14,16 +14,26 @@ song_11 = []
 
 let songs = []
 let allChords = [] 
-let labelCounts = {}
+let difficultyCounts = {}
 let labelProbabilities = [] 
 let chordCountsInLabels = {} 
 let probabilityOfChordsInLabels = {} 
 
 
-const updateArr = (arr, ...params) => 
-	arr.concat([[...params]])
+const addElementsToArrayAsSingleArray = (arr, ...params) => {
+	if(Array.isArray(arr)){
+		return	arr.concat([[...params]])
+	}else{
+		throw "error 1st argument is not an array"
+	}
+} 
+
+	
 
 const updateChordsList = (list, chords) => {
+	if(!Array.isArray(list) || !Array.isArray(chords)){
+		throw "error arguments must be arrays"
+	}
 	chords.forEach(chord => {
 		if(!list.includes(chord)){
 			list.push(chord)
@@ -34,24 +44,27 @@ const updateChordsList = (list, chords) => {
 
 
 function train(chords, difficulty){
-	songs = updateArr(songs, difficulty, chords)
-  allChords = updateChordsList(allChords, chords)
-
-		
-	if((Object.keys(labelCounts).includes(difficulty))){
-		labelCounts[difficulty]++ 
-	} else {
-		labelCounts[difficulty] = 1 
-	}
-
-	console.log(labelCounts)
+		songs = addElementsToArrayAsSingleArray(songs, difficulty, chords)
+  	allChords = updateChordsList(allChords, chords)
+		difficultyCounts = countPropertyInObject(difficultyCounts, difficulty)		
 } 
 
 
+const countPropertyInObject = (obj, element) => {
+	if(!Array.isArray(obj) && typeof(obj) === "object"){
+		if((Object.keys(obj).includes(element))){
+			obj[element]++ 
+		} else {
+			obj[element] = 1 
+		}
+		return obj	
+	}
+
+}
 
 function setLabelProbabilities(){
-	Object.keys(labelCounts).forEach(function(label){
-		labelProbabilities[label] = labelCounts[label] / songs.length 
+	Object.keys(difficultyCounts).forEach(function(label){
+		labelProbabilities[label] = difficultyCounts[label] / songs.length 
 	}) 
 } 
 
@@ -134,5 +147,5 @@ classify(['f#m7', 'a', 'dadd9', 'dmaj7', 'bm', 'bm7', 'd', 'f#m'])
 
 
 module.exports = {
-	classify, train
+	classify, train, addElementsToArrayAsSingleArray, updateChordsList, countPropertyInObject
 }
