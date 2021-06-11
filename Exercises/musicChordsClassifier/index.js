@@ -15,72 +15,54 @@ song_11 = []
 let songs = []
 let allChords = [] 
 let difficultyCounts = {}
-let labelProbabilities = [] 
+let labelProbabilities = {} 
 let chordCountsInLabels = {} 
 let probabilityOfChordsInLabels = {} 
 
 
-const addElementsToArrayAsSingleArray = (arr, ...params) => {
-	if(Array.isArray(arr)){
-		return	arr.concat([[...params]])
-	}else{
-		throw "error 1st argument is not an array"
-	}
-} 
-
-	
-
-const updateChordsList = (list, chords) => {
-	if(!Array.isArray(list) || !Array.isArray(chords)){
-		throw "error arguments must be arrays"
-	}
-	chords.forEach(chord => {
-		if(!list.includes(chord)){
-			list.push(chord)
-		}	
-	})
-	return list
-}
-
-
-function train(chords, difficulty){
+const  train = (chords, difficulty) => {
 		songs = addElementsToArrayAsSingleArray(songs, difficulty, chords)
   	allChords = updateChordsList(allChords, chords)
 		difficultyCounts = countPropertyInObject(difficultyCounts, difficulty)		
 } 
 
 
-const countPropertyInObject = (obj, element) => {
-	if(!Array.isArray(obj) && typeof(obj) === "object"){
-		if((Object.keys(obj).includes(element))){
-			obj[element]++ 
-		} else {
-			obj[element] = 1 
-		}
-		return obj	
+
+
+const  setLabelProbabilities = (difficultyCountsList ) => {
+	if(isObjectNotArray(difficultyCountsList)){
+		let result = {} 
+		Object.keys(difficultyCountsList).forEach(difficulty => {
+			result[difficulty] = difficultyCountsList[difficulty] / songs.length 
+		}) 
+		return result
 	}
-
-}
-
-function setLabelProbabilities(){
-	Object.keys(difficultyCounts).forEach(function(label){
-		labelProbabilities[label] = difficultyCounts[label] / songs.length 
-	}) 
 } 
 
-function setChordCountsInLabels(){
-	songs.forEach(song => {
-		if(!chordCountsInLabels[song[0]]){
-			chordCountsInLabels[song[0]] = {} 
+
+const isObjectNotArray = (obj) => {
+	if(!Array.isArray(obj) && typeof(obj) === "object") return true
+	return false
+}
+	
+
+
+function setChordCountsInLabels(songsArr){
+console.log(songs)
+	let result = {} 
+	songsArr.forEach(([difficulty, chords]) => {
+		if(!result[difficulty]){
+			result[difficulty] = {} 
 		}
-		song[1].forEach(chord => {
-			if(chordCountsInLabels[song[0]][chord] > 0){
-				chordCountsInLabels[song[0]][chord]++ 
+		chords.forEach(chord => {
+			if(result[difficulty][chord] > 0){
+				result[difficulty][chord]++ 
 			} else {
-				chordCountsInLabels[song[0]][chord] = 1 
+				result[difficulty][chord] = 1 
 			}
 		}) 
-	}) 
+	})
+	return result 
 }
 
 function setProbabilityOfChordsInLabels(){
@@ -103,8 +85,11 @@ train(paperBag, 'hard')
 train(toxic, 'hard') 
 train(bulletproof, 'hard') 
 
-setLabelProbabilities() 
-setChordCountsInLabels() 
+labelProbabilities = setLabelProbabilities(difficultyCounts) 
+
+chordCountsInLabels = setChordCountsInLabels(songs) 
+console.log(chordCountsInLabels)
+
 setProbabilityOfChordsInLabels() 
 
 function classify(chords){
@@ -142,10 +127,47 @@ const getDifficultyAndScore = (obj) => {
 }
 
 
-classify(['d', 'g', 'e', 'dm']) 
-classify(['f#m7', 'a', 'dadd9', 'dmaj7', 'bm', 'bm7', 'd', 'f#m']) 
+console.log(classify(['d', 'g', 'e', 'dm']) )
+console.log(classify(['f#m7', 'a', 'dadd9', 'dmaj7', 'bm', 'bm7', 'd', 'f#m']) )
+
+
+function addElementsToArrayAsSingleArray(arr, ...params){
+	if(Array.isArray(arr)){
+		return	arr.concat([[...params]])
+	}else{
+		throw "error 1st argument is not an array"
+	}
+} 
+
+	
+
+function updateChordsList(list, chords){
+	if(!Array.isArray(list) || !Array.isArray(chords)){
+		throw "error arguments must be arrays"
+	}
+	chords.forEach(chord => {
+		if(!list.includes(chord)){
+			list.push(chord)
+		}	
+	})
+	return list
+}
+
+function countPropertyInObject(obj, element){
+	if(!Array.isArray(obj) && typeof(obj) === "object"){
+		if((Object.keys(obj).includes(element))){
+			obj[element]++ 
+		} else {
+			obj[element] = 1 
+		}
+		return obj	
+	}
+
+}
+
 
 
 module.exports = {
-	classify, train, addElementsToArrayAsSingleArray, updateChordsList, countPropertyInObject
+	classify, train, addElementsToArrayAsSingleArray, updateChordsList, countPropertyInObject,
+	setLabelProbabilities, isObjectNotArray, setChordCountsInLabels
 }
