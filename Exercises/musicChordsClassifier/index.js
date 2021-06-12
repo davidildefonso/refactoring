@@ -48,30 +48,29 @@ const isObjectNotArray = (obj) => {
 
 
 function setChordCountsInLabels(songsArr){
-console.log(songs)
-	let result = {} 
-	songsArr.forEach(([difficulty, chords]) => {
-		if(!result[difficulty]){
-			result[difficulty] = {} 
-		}
-		chords.forEach(chord => {
-			if(result[difficulty][chord] > 0){
-				result[difficulty][chord]++ 
-			} else {
-				result[difficulty][chord] = 1 
+	if(Array.isArray(songsArr)){
+		let result = {} 
+		songsArr.forEach(([difficulty, chords]) => {
+			if(!result[difficulty]){
+				result[difficulty] = {} 
 			}
-		}) 
-	})
-	return result 
+			chords.forEach(chord => {
+				result[difficulty] = addOneToPropertyCounts(result[difficulty], chord)
+			}) 
+		})
+		return result 
+	}
+
 }
 
-function setProbabilityOfChordsInLabels(){
-	probabilityOfChordsInLabels = chordCountsInLabels 
-	Object.keys(probabilityOfChordsInLabels).forEach(difficulty =>  {
-		Object.keys(probabilityOfChordsInLabels[difficulty]).forEach(chord => {
-			probabilityOfChordsInLabels[difficulty][chord] /= songs.length 
+function setProbabilityOfChordsInLabels(chordCounts, numberOfSongs){
+	let result = chordCounts
+	Object.keys(chordCounts).forEach(difficulty =>  {
+		Object.keys(chordCounts[difficulty]).forEach(chord => {
+			result[difficulty][chord] /= numberOfSongs 
 		}) 
 	}) 
+	return result
 }
 
 train(imagine, 'easy') 
@@ -88,9 +87,8 @@ train(bulletproof, 'hard')
 labelProbabilities = setLabelProbabilities(difficultyCounts) 
 
 chordCountsInLabels = setChordCountsInLabels(songs) 
-console.log(chordCountsInLabels)
 
-setProbabilityOfChordsInLabels() 
+probabilityOfChordsInLabels = setProbabilityOfChordsInLabels(chordCountsInLabels, songs.length) 
 
 function classify(chords){
 	if(Array.isArray(chords) && 
@@ -109,6 +107,7 @@ function classify(chords){
 			}) 
 			classified[difficulty] = first 
 		}) 
+	
 		const [difficulty, score] =  getDifficultyAndScore(classified) 
 		return `difficulty: ${difficulty} score: ${score}`	
 	}
@@ -117,18 +116,21 @@ function classify(chords){
 
 const getDifficultyAndScore = (obj) => {
 	const result = Object.entries(obj)
-		.reduce((acum, [difficulty, value]) => {
-			if(value > acum){
+		.reduce((acum, element) => {		
+			const [difficulty, value] = element
+			if(value > acum[1]){
 				acum = [difficulty, value]
 			}
 			return acum
-		}, 0)
+		}, ["", 0])
+		
 	return result 
 }
 
 
 console.log(classify(['d', 'g', 'e', 'dm']) )
 console.log(classify(['f#m7', 'a', 'dadd9', 'dmaj7', 'bm', 'bm7', 'd', 'f#m']) )
+
 
 
 function addElementsToArrayAsSingleArray(arr, ...params){
@@ -155,19 +157,24 @@ function updateChordsList(list, chords){
 
 function countPropertyInObject(obj, element){
 	if(!Array.isArray(obj) && typeof(obj) === "object"){
-		if((Object.keys(obj).includes(element))){
+		return addOneToPropertyCounts(obj, element)	
+	}
+
+}
+
+function addOneToPropertyCounts(obj, element){
+	if((Object.keys(obj).includes(element))){
 			obj[element]++ 
 		} else {
 			obj[element] = 1 
 		}
 		return obj	
-	}
-
 }
 
 
 
 module.exports = {
 	classify, train, addElementsToArrayAsSingleArray, updateChordsList, countPropertyInObject,
-	setLabelProbabilities, isObjectNotArray, setChordCountsInLabels
+	setLabelProbabilities, isObjectNotArray, setChordCountsInLabels, setProbabilityOfChordsInLabels,
+	getDifficultyAndScore
 }

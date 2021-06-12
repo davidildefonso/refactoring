@@ -8,6 +8,10 @@ const countPropertyInObject = require('./index').countPropertyInObject
 const setLabelProbabilities = require('./index').setLabelProbabilities
 const isObjectNotArray = require('./index').isObjectNotArray
 const setChordCountsInLabels = require('./index').setChordCountsInLabels
+const setProbabilityOfChordsInLabels = require('./index').setProbabilityOfChordsInLabels
+const getDifficultyAndScore = require('./index').getDifficultyAndScore
+
+
 
 describe('function classify ', () => {
 
@@ -134,7 +138,6 @@ describe("function setLabelProbabilities", () => {
 
 	it("returning object values are numbers '", () => {
 		const response1 = setLabelProbabilities({"easy": 14, "medium": 34, "hard": 2})
-		console.log(response1)
 		expect(Object.values(response1).some(elem => typeof(elem) !== "number" )).toBe(false)
 	})
 })
@@ -178,10 +181,9 @@ describe("function setChordCountsInLabels", () => {
 		
 	})
 
-	it("accepts an array as argument", () => {
+	it("only accepts an array as argument", () => {
 		
 		expect(setChordCountsInLabels([])).toBeDefined()
-		expect(setChordCountsInLabels(["asd", 13, false])).toBeDefined()
 		expect(setChordCountsInLabels({"false": "false"})).not.toBeDefined()
 		expect(setChordCountsInLabels("ssdsd")).not.toBeDefined()
 		expect(setChordCountsInLabels( 1.464)).not.toBeDefined()
@@ -201,18 +203,121 @@ describe("function setChordCountsInLabels", () => {
 
 	it("returning object values are objects '", () => {
 		const response1 = setChordCountsInLabels(data)
-		expect(Object.values(response1).some(elem => typeof(elem) !== "string" )).toBe(false)
+		expect(Object.values(response1).some(elem => !isObjectNotArray(elem) )).toBe(false)
 	})
 
-	// it("each returning object value has properties type string'", () => {
-	// 	const response1 = setChordCountsInLabels(data)
-	// 	const values = Object.values(response1)
-	// 	expect(  Object.keys(values).some(elem => typeof(elem) !== "string" )).toBe(false)
-	// })
+	it("each returning object value has properties type string'", () => {
+		const response1 = setChordCountsInLabels(data)
+		const values = Object.values(response1)
+		expect(  Object.keys(values).some(elem => typeof(elem) !== "string" )).toBe(false)
+	})
 
-	// it("each returning object value has keys of type integer (min 1)'", () => {
-	// 	const response1 = setChordCountsInLabels(data)
-	// 	const values = Object.values(response1)
-	// 	expect(Object.values(response1).some(elem => typeof(elem) !== "string" )).toBe(false)
-	// })
+	it("each returning object value has keys of type integer (min 1)'", () => {
+		const response1 = setChordCountsInLabels(data)
+		const values = Object.values(response1)
+		expect(Object.keys(values).some(elem => 
+			Number.isInteger(elem) && elem >= 1 )).toBe(false)
+	})
+})
+
+
+
+describe("function setProbabilityOfChordsInLabels", () => {
+
+	let data
+	let songsLenght = 10
+
+	beforeEach(() => {
+		data  = {
+      "easy": { "c": 3, "cmaj7": 1, "f": 3, "am": 2, "dm": 1, "g": 3, "e7": 1, "em": 1 },
+      "medium": {
+        "f": 1,
+        "dm": 1,
+        "bb": 2,
+        "c": 2,
+        "a": 1,
+        "bbm": 2,
+        "cm": 1,
+        "g": 2,
+        "eb": 1,
+        "fm": 1,
+        "ab": 2,
+        "gsus4": 1,
+        "b": 1,
+        "bsus4": 1,
+        "cmsus4": 1,
+        "cm6": 1,
+        "ebm7": 1,
+        "dbadd9": 1,
+        "fm7": 1,
+        "abmaj7": 1,
+        "ebm": 1
+      },
+      "hard": {
+        "bm7": 1,
+        "e": 1,
+        "c": 1,
+        "g": 2,
+        "b7": 1,
+        "f": 1,
+        "em": 1,
+        "a": 1,
+        "cmaj7": 1,
+        "em7": 1,
+        "a7": 1,
+        "f7": 1,
+        "b": 2,
+        "cm": 1,
+        "eb": 1,
+        "cdim": 1,
+        "eb7": 1,
+        "d7": 1,
+        "db7": 1,
+        "ab": 1,
+        "gmaj7": 1,
+        "g7": 1,
+        'd#m': 1,
+        'g#': 1,
+        'f#': 1,
+        'g#m': 1,
+        'c#': 1
+      }
+    }
+
+		
+	})
+
+	it("returns and object showing the correct probability of each chord in label", () => {
+		const result = setProbabilityOfChordsInLabels(data, songsLenght)
+		expect(result["easy"]["c"]).toBe(3/10)
+	
+	})
+
+})
+
+
+
+
+describe("function getDifficultyAndScore", () => {
+
+	let data
+
+
+	beforeEach(() => {
+		data  =    {
+      'easy': 1.31 ,
+      'medium': 1.7061000000000002 ,
+      'hard': 1.4541000000000002 
+		}
+
+		
+	})
+
+	it("returns an array of the difficulty which has the max score of the data array", () => {
+		const result = getDifficultyAndScore(data)
+		expect(result[0]).toBe("medium")
+		expect(result[1]).toEqual(1.7061000000000002)
+	
+	})
+
 })
