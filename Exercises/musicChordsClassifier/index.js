@@ -15,21 +15,21 @@ song_11 = []
 let songs = []
 let allChords = [] 
 let difficultyCounts = {}
-let labelProbabilities = {} 
+let difficultyProbabilities = {} 
 let chordCountsInLabels = {} 
 let probabilityOfChordsInLabels = {} 
 
 
 const  train = (chords, difficulty) => {
-		songs = addElementsToArrayAsSingleArray(songs, difficulty, chords)
-  	allChords = updateChordsList(allChords, chords)
-		difficultyCounts = countPropertyInObject(difficultyCounts, difficulty)		
+	songs = addElementsToArrayAsSingleArray(songs, difficulty, chords)
+	allChords = addChordToList(allChords, chords)
+	difficultyCounts = countPropertyInObject(difficultyCounts, difficulty)		
 } 
 
 
 
 
-const  setLabelProbabilities = (difficultyCountsList ) => {
+const  setDifficultyProbabilities = (difficultyCountsList ) => {
 	if(isObjectNotArray(difficultyCountsList)){
 		let result = {} 
 		Object.keys(difficultyCountsList).forEach(difficulty => {
@@ -84,35 +84,42 @@ train(paperBag, 'hard')
 train(toxic, 'hard') 
 train(bulletproof, 'hard') 
 
-labelProbabilities = setLabelProbabilities(difficultyCounts) 
-
+difficultyProbabilities = setDifficultyProbabilities(difficultyCounts) 
 chordCountsInLabels = setChordCountsInLabels(songs) 
-
 probabilityOfChordsInLabels = setProbabilityOfChordsInLabels(chordCountsInLabels, songs.length) 
 
 function classify(chords){
-	if(Array.isArray(chords) && 
-			!chords.some(chord => typeof(chord) !== 'string')){
-		let classified = {} 
-		Object.keys(labelProbabilities).forEach(difficulty => {
-			let first = labelProbabilities[difficulty] + 1.01 
-			chords.forEach(chord => {
-				const probabilityOfChordInLabel =
-					probabilityOfChordsInLabels[difficulty][chord] 
-				if(!probabilityOfChordInLabel){
-					first + 1.01 
-				} else {
-					first = first * (probabilityOfChordInLabel + 1.01) 
-				}
-			}) 
-			classified[difficulty] = first 
-		}) 
-	
-		const [difficulty, score] =  getDifficultyAndScore(classified) 
-		return `difficulty: ${difficulty} score: ${score}`	
+	if(checkArgumentIsArrayAndHasOnlyStringElements(chords)){
+		let classified = getDifficultiesScores(chords, difficultyProbabilities, probabilityOfChordsInLabels)	
+		const [topDifficulty, topScore] =  getDifficultyAndScore(classified) 
+		return `difficulty: ${topDifficulty} score: ${topScore}`	
 	}
 	return 'chords format is invalid'
 } 
+
+function getDifficultiesScores(chords, difficultyProbs, chordsProbs){
+	let result = {}
+	Object.keys(difficultyProbs).forEach(difficulty => {
+		let probability = difficultyProbs[difficulty] + 1.01 
+		chords.forEach(chord => {
+			const probabilityOfChordInLabel =
+				chordsProbs[difficulty][chord] 
+			if(!probabilityOfChordInLabel){
+				probability + 1.01 
+			} else {
+				probability *= (probabilityOfChordInLabel + 1.01) 
+			}
+		}) 
+		result[difficulty] = probability 
+	}) 	
+	return result
+}
+
+function checkArgumentIsArrayAndHasOnlyStringElements(arr){
+	return Array.isArray(arr) && 
+			!arr.some(elem => typeof(elem) !== 'string')
+}  
+
 
 const getDifficultyAndScore = (obj) => {
 	const result = Object.entries(obj)
@@ -143,7 +150,7 @@ function addElementsToArrayAsSingleArray(arr, ...params){
 
 	
 
-function updateChordsList(list, chords){
+function addChordToList(list, chords){
 	if(!Array.isArray(list) || !Array.isArray(chords)){
 		throw "error arguments must be arrays"
 	}
@@ -174,7 +181,7 @@ function addOneToPropertyCounts(obj, element){
 
 
 module.exports = {
-	classify, train, addElementsToArrayAsSingleArray, updateChordsList, countPropertyInObject,
-	setLabelProbabilities, isObjectNotArray, setChordCountsInLabels, setProbabilityOfChordsInLabels,
+	classify, train, addElementsToArrayAsSingleArray, addChordToList, countPropertyInObject,
+	setDifficultyProbabilities, isObjectNotArray, setChordCountsInLabels, setProbabilityOfChordsInLabels,
 	getDifficultyAndScore
 }

@@ -3,9 +3,9 @@ const assert = require('assert').strict
 const classify = require('./index').classify
 const train = require('./index').train
 const addElementsToArrayAsSingleArray = require('./index').addElementsToArrayAsSingleArray
-const updateChordsList = require('./index').updateChordsList
+const addChordToList = require('./index').addChordToList
 const countPropertyInObject = require('./index').countPropertyInObject
-const setLabelProbabilities = require('./index').setLabelProbabilities
+const setDifficultyProbabilities = require('./index').setDifficultyProbabilities
 const isObjectNotArray = require('./index').isObjectNotArray
 const setChordCountsInLabels = require('./index').setChordCountsInLabels
 const setProbabilityOfChordsInLabels = require('./index').setProbabilityOfChordsInLabels
@@ -80,21 +80,21 @@ describe('function addElementsToArrayAsSingleArray ', () => {
 
 describe("function updateChordList: ", () => {
   it("only accepts arrays as  parameters", () => {
-		expect(updateChordsList(["a", "b", "c", "d"], [2])).toBeDefined()
-		expect(updateChordsList([], [2])).toBeDefined()
-		expect(updateChordsList([], [])).toBeDefined()
-		expect(updateChordsList([2], [])).toBeDefined()
-		expect(updateChordsList([[2, 3]], [2, 6 , 7])).toBeDefined()
-		expect(() => { updateChordsList(1, 2) } ).toThrow("error arguments must be arrays")
-		expect(() => updateChordsList("sd-123", 2)).toThrowError("error arguments must be arrays")
-		expect(() => updateChordsList({1:1, 2: 2}, 2)).toThrowError("error arguments must be arrays")
-		expect(() => updateChordsList(false, [2])).toThrowError("error arguments must be arrays")
-		expect(() => updateChordsList([2, 3], null)).toThrowError("error arguments must be arrays")
-		expect(() => updateChordsList([undefined], 3)).toThrowError("error arguments must be arrays")
-		expect(() => updateChordsList("", ["sda"])).toThrowError("error arguments must be arrays")
-		expect(() => updateChordsList(0, 0)).toThrowError("error arguments must be arrays")
-		expect(() => updateChordsList(1.23, [1.3])).toThrowError("error arguments must be arrays")
-		expect(() => updateChordsList(NaN, [NaN])).toThrowError("error arguments must be arrays")
+		expect(addChordToList(["a", "b", "c", "d"], [2])).toBeDefined()
+		expect(addChordToList([], [2])).toBeDefined()
+		expect(addChordToList([], [])).toBeDefined()
+		expect(addChordToList([2], [])).toBeDefined()
+		expect(addChordToList([[2, 3]], [2, 6 , 7])).toBeDefined()
+		expect(() => { addChordToList(1, 2) } ).toThrow("error arguments must be arrays")
+		expect(() => addChordToList("sd-123", 2)).toThrowError("error arguments must be arrays")
+		expect(() => addChordToList({1:1, 2: 2}, 2)).toThrowError("error arguments must be arrays")
+		expect(() => addChordToList(false, [2])).toThrowError("error arguments must be arrays")
+		expect(() => addChordToList([2, 3], null)).toThrowError("error arguments must be arrays")
+		expect(() => addChordToList([undefined], 3)).toThrowError("error arguments must be arrays")
+		expect(() => addChordToList("", ["sda"])).toThrowError("error arguments must be arrays")
+		expect(() => addChordToList(0, 0)).toThrowError("error arguments must be arrays")
+		expect(() => addChordToList(1.23, [1.3])).toThrowError("error arguments must be arrays")
+		expect(() => addChordToList(NaN, [NaN])).toThrowError("error arguments must be arrays")
 	
 	})
 
@@ -113,31 +113,31 @@ describe("function countPropertyInObject", () => {
 })
 
 
-describe("function setLabelProbabilities", () => {
+describe("function setDifficultyProbabilities", () => {
 	it("receives 1 objects not an arrays as argument", () => {
-		expect(setLabelProbabilities({})).toBeDefined()
-		expect(setLabelProbabilities({1: 2, 2:2})).toBeDefined()
-		expect(setLabelProbabilities([])).not.toBeDefined()
-		expect(setLabelProbabilities(2)).not.toBeDefined()
-		expect(setLabelProbabilities(false)).not.toBeDefined()
-		expect(setLabelProbabilities("string")).not.toBeDefined()
-		expect(setLabelProbabilities(1.54)).not.toBeDefined()
+		expect(setDifficultyProbabilities({})).toBeDefined()
+		expect(setDifficultyProbabilities({1: 2, 2:2})).toBeDefined()
+		expect(setDifficultyProbabilities([])).not.toBeDefined()
+		expect(setDifficultyProbabilities(2)).not.toBeDefined()
+		expect(setDifficultyProbabilities(false)).not.toBeDefined()
+		expect(setDifficultyProbabilities("string")).not.toBeDefined()
+		expect(setDifficultyProbabilities(1.54)).not.toBeDefined()
 	})
 
 	it("returns an object not an array", () => {
-		const response1 = setLabelProbabilities({"easy": 14, "medium": 34, "hard": 2})
+		const response1 = setDifficultyProbabilities({"easy": 14, "medium": 34, "hard": 2})
 		expect(isObjectNotArray(response1)).toBe(true)
 	
 	})
 
 	it("returning object only has 3 properties 'easy, medium, hard'", () => {
 		const properties = "easymediumhard"
-		const response1 = setLabelProbabilities({"easy": 14, "medium": 34, "hard": 2})
+		const response1 = setDifficultyProbabilities({"easy": 14, "medium": 34, "hard": 2})
 		expect(Object.keys(response1).join("")).toBe(properties)
 	})
 
 	it("returning object values are numbers '", () => {
-		const response1 = setLabelProbabilities({"easy": 14, "medium": 34, "hard": 2})
+		const response1 = setDifficultyProbabilities({"easy": 14, "medium": 34, "hard": 2})
 		expect(Object.values(response1).some(elem => typeof(elem) !== "number" )).toBe(false)
 	})
 })

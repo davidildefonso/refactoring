@@ -25,7 +25,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>97/97</span>
+                <span class='fraction'>99/99</span>
             </div>
         
             
@@ -39,14 +39,14 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>21/21</span>
+                <span class='fraction'>23/23</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>96/96</span>
+                <span class='fraction'>98/98</span>
             </div>
         
             
@@ -237,7 +237,13 @@
 <a name='L178'></a><a href='#L178'>178</a>
 <a name='L179'></a><a href='#L179'>179</a>
 <a name='L180'></a><a href='#L180'>180</a>
-<a name='L181'></a><a href='#L181'>181</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L181'></a><a href='#L181'>181</a>
+<a name='L182'></a><a href='#L182'>182</a>
+<a name='L183'></a><a href='#L183'>183</a>
+<a name='L184'></a><a href='#L184'>184</a>
+<a name='L185'></a><a href='#L185'>185</a>
+<a name='L186'></a><a href='#L186'>186</a>
+<a name='L187'></a><a href='#L187'>187</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
@@ -324,14 +330,19 @@
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">36x</span>
-<span class="cline-any cline-yes">110x</span>
+<span class="cline-any cline-yes">26x</span>
+<span class="cline-any cline-yes">26x</span>
+<span class="cline-any cline-yes">26x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">10x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">26x</span>
 <span class="cline-any cline-yes">26x</span>
 <span class="cline-any cline-yes">78x</span>
@@ -346,15 +357,16 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">78x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">26x</span>
 <span class="cline-any cline-yes">26x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">10x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">36x</span>
+<span class="cline-any cline-yes">110x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">27x</span>
 <span class="cline-any cline-yes">27x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">81x</span>
@@ -434,21 +446,21 @@ song_11 = []
 let songs = []
 let allChords = [] 
 let difficultyCounts = {}
-let labelProbabilities = {} 
+let difficultyProbabilities = {} 
 let chordCountsInLabels = {} 
 let probabilityOfChordsInLabels = {} 
 &nbsp;
 &nbsp;
 const  train = (chords, difficulty) =&gt; {
-		songs = addElementsToArrayAsSingleArray(songs, difficulty, chords)
-  	allChords = updateChordsList(allChords, chords)
-		difficultyCounts = countPropertyInObject(difficultyCounts, difficulty)		
+	songs = addElementsToArrayAsSingleArray(songs, difficulty, chords)
+	allChords = addChordToList(allChords, chords)
+	difficultyCounts = countPropertyInObject(difficultyCounts, difficulty)		
 } 
 &nbsp;
 &nbsp;
 &nbsp;
 &nbsp;
-const  setLabelProbabilities = (difficultyCountsList ) =&gt; {
+const  setDifficultyProbabilities = (difficultyCountsList ) =&gt; {
 	if(isObjectNotArray(difficultyCountsList)){
 		let result = {} 
 		Object.keys(difficultyCountsList).forEach(difficulty =&gt; {
@@ -503,38 +515,44 @@ train(paperBag, 'hard')
 train(toxic, 'hard') 
 train(bulletproof, 'hard') 
 &nbsp;
-labelProbabilities = setLabelProbabilities(difficultyCounts) 
-&nbsp;
+difficultyProbabilities = setDifficultyProbabilities(difficultyCounts) 
 chordCountsInLabels = setChordCountsInLabels(songs) 
-&nbsp;
 probabilityOfChordsInLabels = setProbabilityOfChordsInLabels(chordCountsInLabels, songs.length) 
 &nbsp;
 function classify(chords){
-	if(Array.isArray(chords) &amp;&amp; 
-			!chords.some(chord =&gt; typeof(chord) !== 'string')){
-		let classified = {} 
-		Object.keys(labelProbabilities).forEach(difficulty =&gt; {
-			let first = labelProbabilities[difficulty] + 1.01 
-			chords.forEach(chord =&gt; {
-				const probabilityOfChordInLabel =
-					probabilityOfChordsInLabels[difficulty][chord] 
-				if(!probabilityOfChordInLabel){
-					first + 1.01 
-				} else {
-					first = first * (probabilityOfChordInLabel + 1.01) 
-				}
-			}) 
-			classified[difficulty] = first 
-		}) 
-	
-		const [difficulty, score] =  getDifficultyAndScore(classified) 
-		return `difficulty: ${difficulty} score: ${score}`	
+	if(checkArgumentIsArrayAndHasOnlyStringElements(chords)){
+		let classified = getDifficultiesScores(chords, difficultyProbabilities, probabilityOfChordsInLabels)	
+		const [topDifficulty, topScore] =  getDifficultyAndScore(classified) 
+		return `difficulty: ${topDifficulty} score: ${topScore}`	
 	}
 	return 'chords format is invalid'
 } 
 &nbsp;
+function getDifficultiesScores(chords, difficultyProbs, chordsProbs){
+	let result = {}
+	Object.keys(difficultyProbs).forEach(difficulty =&gt; {
+		let probability = difficultyProbs[difficulty] + 1.01 
+		chords.forEach(chord =&gt; {
+			const probabilityOfChordInLabel =
+				chordsProbs[difficulty][chord] 
+			if(!probabilityOfChordInLabel){
+				probability + 1.01 
+			} else {
+				probability *= (probabilityOfChordInLabel + 1.01) 
+			}
+		}) 
+		result[difficulty] = probability 
+	}) 	
+	return result
+}
+&nbsp;
+function checkArgumentIsArrayAndHasOnlyStringElements(arr){
+	return Array.isArray(arr) &amp;&amp; 
+			!arr.some(elem =&gt; typeof(elem) !== 'string')
+}  
+&nbsp;
+&nbsp;
 const getDifficultyAndScore = (obj) =&gt; {
-console.log(obj)
 	const result = Object.entries(obj)
 		.reduce((acum, element) =&gt; {		
 			const [difficulty, value] = element
@@ -563,7 +581,7 @@ function addElementsToArrayAsSingleArray(arr, ...params){
 &nbsp;
 	
 &nbsp;
-function updateChordsList(list, chords){
+function addChordToList(list, chords){
 	if(!Array.isArray(list) || !Array.isArray(chords)){
 		throw "error arguments must be arrays"
 	}
@@ -594,8 +612,8 @@ function addOneToPropertyCounts(obj, element){
 &nbsp;
 &nbsp;
 module.exports = {
-	classify, train, addElementsToArrayAsSingleArray, updateChordsList, countPropertyInObject,
-	setLabelProbabilities, isObjectNotArray, setChordCountsInLabels, setProbabilityOfChordsInLabels,
+	classify, train, addElementsToArrayAsSingleArray, addChordToList, countPropertyInObject,
+	setDifficultyProbabilities, isObjectNotArray, setChordCountsInLabels, setProbabilityOfChordsInLabels,
 	getDifficultyAndScore
 }</pre></td></tr></table></pre>
 
@@ -604,7 +622,7 @@ module.exports = {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Sat Jun 12 2021 11:43:11 GMT-0500 (hora estándar de Perú)
+                at Sat Jun 12 2021 15:14:38 GMT-0500 (hora estándar de Perú)
             </div>
         </div>
         <script src="prettify.js"></script>
