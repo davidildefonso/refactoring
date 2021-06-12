@@ -23,13 +23,26 @@ let probabilityOfChordsInLabels = {}
 const  train = (chords, difficulty) => {
 	songs = addElementsToArrayAsSingleArray(songs, difficulty, chords)
 	allChords = addChordToList(allChords, chords)
-	difficultyCounts = countPropertyInObject(difficultyCounts, difficulty)		
+	difficultyCounts = countPropertyInObject(difficultyCounts, difficulty)	
+} 
+
+function getProbabilities(){
+	difficultyProbabilities = setDifficultyProbabilities(difficultyCounts) 
+	chordCountsInLabels = setChordCountsInLabels(songs) 
+	probabilityOfChordsInLabels = setProbabilityOfChordsInLabels(chordCountsInLabels, songs.length) 	
+}
+
+function classify(chords){
+	if(checkArgumentIsArrayAndHasOnlyStringElements(chords)){
+		let classified = getDifficultiesScores(chords, difficultyProbabilities, probabilityOfChordsInLabels)	
+		const [topDifficulty, topScore] =  getDifficultyAndScore(classified) 
+		return `difficulty: ${topDifficulty} score: ${topScore}`	
+	}
+	return 'chords format is invalid'
 } 
 
 
-
-
-const  setDifficultyProbabilities = (difficultyCountsList ) => {
+const  setDifficultyProbabilities = (difficultyCountsList) => {
 	if(isObjectNotArray(difficultyCountsList)){
 		let result = {} 
 		Object.keys(difficultyCountsList).forEach(difficulty => {
@@ -38,14 +51,6 @@ const  setDifficultyProbabilities = (difficultyCountsList ) => {
 		return result
 	}
 } 
-
-
-const isObjectNotArray = (obj) => {
-	if(!Array.isArray(obj) && typeof(obj) === "object") return true
-	return false
-}
-	
-
 
 function setChordCountsInLabels(songsArr){
 	if(Array.isArray(songsArr)){
@@ -73,30 +78,6 @@ function setProbabilityOfChordsInLabels(chordCounts, numberOfSongs){
 	return result
 }
 
-train(imagine, 'easy') 
-train(somewhere_over_the_rainbow, 'easy') 
-train(tooManyCooks, 'easy') 
-train(iWillFollowYouIntoTheDark, 'medium') 
-train(babyOneMoreTime, 'medium') 
-train(creep, 'medium') 
-train(army, "medium")
-train(paperBag, 'hard') 
-train(toxic, 'hard') 
-train(bulletproof, 'hard') 
-
-difficultyProbabilities = setDifficultyProbabilities(difficultyCounts) 
-chordCountsInLabels = setChordCountsInLabels(songs) 
-probabilityOfChordsInLabels = setProbabilityOfChordsInLabels(chordCountsInLabels, songs.length) 
-
-function classify(chords){
-	if(checkArgumentIsArrayAndHasOnlyStringElements(chords)){
-		let classified = getDifficultiesScores(chords, difficultyProbabilities, probabilityOfChordsInLabels)	
-		const [topDifficulty, topScore] =  getDifficultyAndScore(classified) 
-		return `difficulty: ${topDifficulty} score: ${topScore}`	
-	}
-	return 'chords format is invalid'
-} 
-
 function getDifficultiesScores(chords, difficultyProbs, chordsProbs){
 	let result = {}
 	Object.keys(difficultyProbs).forEach(difficulty => {
@@ -115,12 +96,6 @@ function getDifficultiesScores(chords, difficultyProbs, chordsProbs){
 	return result
 }
 
-function checkArgumentIsArrayAndHasOnlyStringElements(arr){
-	return Array.isArray(arr) && 
-			!arr.some(elem => typeof(elem) !== 'string')
-}  
-
-
 const getDifficultyAndScore = (obj) => {
 	const result = Object.entries(obj)
 		.reduce((acum, element) => {		
@@ -133,12 +108,6 @@ const getDifficultyAndScore = (obj) => {
 		
 	return result 
 }
-
-
-console.log(classify(['d', 'g', 'e', 'dm']) )
-console.log(classify(['f#m7', 'a', 'dadd9', 'dmaj7', 'bm', 'bm7', 'd', 'f#m']) )
-
-
 
 function addElementsToArrayAsSingleArray(arr, ...params){
 	if(Array.isArray(arr)){
@@ -178,6 +147,34 @@ function addOneToPropertyCounts(obj, element){
 		return obj	
 }
 
+
+function checkArgumentIsArrayAndHasOnlyStringElements(arr){
+	return Array.isArray(arr) && 
+			!arr.some(elem => typeof(elem) !== 'string')
+}  
+
+
+const isObjectNotArray = (obj) => {
+	if(!Array.isArray(obj) && typeof(obj) === "object") return true
+	return false
+}
+
+
+train(imagine, 'easy') 
+train(somewhere_over_the_rainbow, 'easy') 
+train(tooManyCooks, 'easy') 
+train(iWillFollowYouIntoTheDark, 'medium') 
+train(babyOneMoreTime, 'medium') 
+train(creep, 'medium') 
+train(army, "medium")
+train(paperBag, 'hard') 
+train(toxic, 'hard') 
+train(bulletproof, 'hard') 
+
+getProbabilities()
+
+console.log(classify(['d', 'g', 'e', 'dm']) )
+console.log(classify(['f#m7', 'a', 'dadd9', 'dmaj7', 'bm', 'bm7', 'd', 'f#m']) )
 
 
 module.exports = {
